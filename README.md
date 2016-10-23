@@ -8,4 +8,9 @@ This is free.
 
 Item & character image belongs to ratemyserver.net.
 
+Instructions:
+Clone or download as zip
+Copy and paste to your flux folder
+Test by going to your flux site, login and go to my account, chose your character, then in the upper menu click View Inventory
+
 Written by Axis ( x13th of rA & herc )
