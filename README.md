@@ -1,0 +1,1 @@
+# -flux-addon-view-char-equip
