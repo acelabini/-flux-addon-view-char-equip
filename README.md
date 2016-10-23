@@ -1,6 +1,6 @@
 # -flux-addon-view-char-equip
 
-![alt tag](http://image.prntscr.com/image/e811c6ba9cb94d6d9f8868e5402cd3b3.png)
+![alt tag](http://image.prntscr.com/image/e6021e27cf6f48b6b8769866ccc92bc4.png)
 
 A simple flux addon that can view a character in-game equipment and status.
 
