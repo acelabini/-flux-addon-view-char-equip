@@ -17,23 +17,32 @@
     }
     function get_item_pos( $item_location, $item, $cards )
     {
-        $add_card = [];
-        for($i = count($cards); $i <= 3; $i++){
-            $add_card[] = null;
-        }
-        $cards = array_merge($cards, $add_card);
-        $File = searchFile('idnum2itemresnametable.txt',$item->nameid);
-        $image = getImage($File,'item');
+        // Search for card prefix name
+        $cardprefixnametable = searchFile('cardprefixnametable.txt',$cards, $item);
+
+        // VVS item //
+        $strong = "";
+        if ($item->card0 == 255 && intval($item->card1/1280) > 0):
+            for ($i = 0; $i < intval($item->card1/1280); $i++):
+                $strong .= 'Very';
+            endfor;
+            $strong .= 'Strong';
+        endif;
         $item_refine = $item->refine > 0 ? '+'.$item->refine.' ' : '';
-        $item_slot = $item->slots > 0 ? '['.$item->slots.']' : '';
+        $item_slot = $item->slots > 0 ? ' ['.$item->slots.']' : '';
+        // VVS end//
+
         return $item->equip == $item_location ?
             (object)[
-                'nameid'        => $image,
-                'name_japanese' => $item_refine.$item_slot.$item->name_japanese,
-                'card0'         => $cards[0],
-                'card1'         => $cards[1],
-                'card2'         => $cards[2],
-                'card3'         => $cards[3]
+                'nameid'        => $item->nameid,
+                'name_japanese' => $item_refine.$strong.$cardprefixnametable.$item->name_japanese.$item_slot,
+                'item_name'     => $item_refine.$strong.$item->name_japanese,
+                'cardsOver'     => $item->cardsOver,
+                'item'          => $item,
+                'card0'         => $cards[$item->card0],
+                'card1'         => $cards[$item->card1],
+                'card2'         => $cards[$item->card2],
+                'card3'         => $cards[$item->card3]
             ] : null;
     }
 
@@ -46,23 +55,55 @@
         return $card;
     }
 
-    function getImage($filename, $mod)
+    function getItemDesc($item)
     {
+        $idnum2itemdesctable = searchFile('idnum2itemdesctable.txt',$item);
+        return $idnum2itemdesctable;
+    }
+    function getImage($item, $mod, $ajax = null)
+    {
+        // Search for item image
+        $filename = searchFile('idnum2itemresnametable.txt',$item);
         $url = VIpath().'data/texture/유저인터페이스/'.$mod.'/'.$filename.'.bmp';
-        $url = '?module=character&action=generateImage&image='.$url;
+        $url = $ajax == null ? '?module=character&action=generateImage&type='.$mod.'&image='.$url : $url;
         return $url;
     }
-    function searchFile($filename, $string)
+    function searchFile($filename, $string, $item = null)
     {
         $file = VIpath().'data/'.$filename;
-        $searchfor = $string;
         $contents = file_get_contents($file);
-        $pattern = preg_quote($searchfor, '/');
-        $pattern = "/^.*$pattern.*\$/m";
-        if(preg_match_all($pattern, $contents, $matches)){
-            $match = substr(substr($matches[0][0],strpos($matches[0][0],"#") +1,-1),0,-1);
-            $match =  mb_convert_encoding($match, 'UTF-8', 'EUC-KR');
-            return $match ;
+        if(is_array($string)){
+            $card_name = [];
+            for($i = 0; $i<=3; $i++){
+                $card = 'card'.$i;
+                if($item->$card != 0) {
+                    $pattern = preg_quote($item->$card, '/');
+                    $pattern = "/^.*$pattern.*\$/m";
+                    if (preg_match_all($pattern, $contents, $matches)) {
+                        $match = substr(substr($matches[0][0], strpos($matches[0][0], "#") + 1, -1), 0, -1);
+                        $match = mb_convert_encoding($match, 'UTF-8', 'EUC-KR');
+                        $card_name[] = $match;
+                    }
+                }
+            }
+            $card_pri = [2=>'Double',3=>'Triple',4=>'Quadruple'];
+            $cardArray = $card_name;
+            $card_name = "";
+            foreach(array_count_values($cardArray) as $card => $count){
+                if($count > 1){
+                    $card_name .= $card_pri[$count]." ";
+                }
+                $card_name .= $card." ";
+            }
+            return $card_name;
+        }else {
+            $pattern = preg_quote($string, '/');
+            $pattern = "/^.*$pattern.*\$/m";
+            if (preg_match_all($pattern, $contents, $matches)) {
+                $match = substr(substr($matches[0][0], strpos($matches[0][0], "#") + 1, -1), 0, -1);
+                $match = mb_convert_encoding($match, 'UTF-8', 'EUC-KR');
+                return $match;
+            }
         }
         return "";
     }

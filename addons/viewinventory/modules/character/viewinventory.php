@@ -81,11 +81,9 @@ if ($char) {
                 $cardIDs[] = $item->card3;
                 $item->cardsOver++;
             }
-
             if ($item->card0 == 254 || $item->card0 == 255 || $item->card0 == -256 || $item->cardsOver < 0) {
                 $item->cardsOver = 0;
             }
-
             if ($cardIDs) {
                 $ids = implode(',', array_fill(0, count($cardIDs), '?'));
                 $sql = "SELECT id, name_japanese FROM {$server->charMapDatabase}.items WHERE id IN ($ids)";
@@ -95,7 +93,7 @@ if ($char) {
                 $temp = $sth->fetchAll();
                 if ($temp) {
                     foreach ($temp as $card) {
-                        $cards[] = $card->name_japanese;
+                        $cards[$card->id] = $card->name_japanese;
                     }
                 }
             }
@@ -112,17 +110,18 @@ if ($char) {
                 'Accessory_2'               =>    get_item_pos(128, $item, $cards),
                 'Upper_headgear'            =>    get_item_pos(256, $item, $cards),
                 'Middle_headgear'           =>    get_item_pos(512, $item, $cards),
-                'Costume_Top_Headgear'      =>    get_item_pos(1024, $item, $cards),
-                'Costume_Mid_Headgear'      =>    get_item_pos(2048, $item, $cards),
-                'Costume_Low_Headgear'      =>    get_item_pos(4096, $item, $cards),
-                'Costume_Garment'           =>    get_item_pos(8192, $item, $cards),
-                'Arrow_Type'                =>    get_item_pos(32768, $item, $cards),
-                'Shadow_Armor'              =>    get_item_pos(65536, $item, $cards),
-                'Shadow_Weapon'             =>    get_item_pos(131072, $item, $cards),
-                'Shadow_Shield'             =>    get_item_pos(262144, $item, $cards),
-                'Shadow_Shoes'              =>    get_item_pos(524288, $item, $cards),
-                'Shadow_Accessory_2'        =>    get_item_pos(1048576, $item, $cards),
-                'Shadow_Accessory_1'        =>    get_item_pos(2097152, $item, $cards),
+                //TODO: Implement this
+//                'Costume_Top_Headgear'      =>    get_item_pos(1024, $item, $cards),
+//                'Costume_Mid_Headgear'      =>    get_item_pos(2048, $item, $cards),
+//                'Costume_Low_Headgear'      =>    get_item_pos(4096, $item, $cards),
+//                'Costume_Garment'           =>    get_item_pos(8192, $item, $cards),
+//                'Arrow_Type'                =>    get_item_pos(32768, $item, $cards),
+//                'Shadow_Armor'              =>    get_item_pos(65536, $item, $cards),
+//                'Shadow_Weapon'             =>    get_item_pos(131072, $item, $cards),
+//                'Shadow_Shield'             =>    get_item_pos(262144, $item, $cards),
+//                'Shadow_Shoes'              =>    get_item_pos(524288, $item, $cards),
+//                'Shadow_Accessory_2'        =>    get_item_pos(1048576, $item, $cards),
+//                'Shadow_Accessory_1'        =>    get_item_pos(2097152, $item, $cards),
             );
             unset($cards);
             $cards = array();
