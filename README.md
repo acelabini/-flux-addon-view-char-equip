@@ -23,9 +23,9 @@ How to add my server items?
 3. go to data\texture\유저인터페이스
 4. put your item images
 item folder 
- - item icon
+- item icon
 collection folder
- - item full image
+- item full image
 
 
 Written by Axis ( x13th of rA & herc )
