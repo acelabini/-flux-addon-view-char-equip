@@ -25,14 +25,11 @@ How to add my server items?
 3. paste your server idnum2itemdesctable.txt and idnum2itemresnametable.txt which can be found in your grf
 3. go to data\texture\유저인터페이스
 4. put your item images
-
 item folder 
-
 -item icon
-
 collection folder
-
 -item full image
+
 
 
 Written by Axis ( x13th of rA & herc )
