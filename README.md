@@ -19,6 +19,7 @@ if ($isMine && $auth->actionAllowed('character', 'viewinventory')) {
 Test by going to your flux site, login and go to my account, chose your character, then in the upper menu click View Inventory
 
 How to add my server items?
+
 1. item should be in item_db or item_db2
 2. go to addons\viewinventory\data\
 3. paste your server idnum2itemdesctable.txt and idnum2itemresnametable.txt which can be found in your grf
@@ -26,8 +27,11 @@ How to add my server items?
 4. put your item images
 
 item folder 
+
 -item icon
+
 collection folder
+
 -item full image
 
 
