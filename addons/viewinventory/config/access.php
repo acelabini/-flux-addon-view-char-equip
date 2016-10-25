@@ -2,7 +2,8 @@
 return array(
 	'modules' => array(
 		'character' => array(
-			'viewinventory' => AccountLevel::NORMAL
+			'viewinventory' => AccountLevel::NORMAL,
+			'generateImage' => AccountLevel::NORMAL
 		)
 	),
 	'features' => array(

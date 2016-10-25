@@ -1,21 +1,32 @@
 <?php
 if (!defined('FLUX_ROOT')) exit;
 
+
+if (Flux::config('UseCleanUrls') == true && Flux::config('BaseURI') == '/') {
+    $VIpath = $this->basePath.FLUX_ADDON_DIR.'/viewinventory/';
+} else if (Flux::config('UseCleanUrls') == true ) {
+    $VIpath = $this->basePath.'/'.FLUX_ADDON_DIR.'/viewinventory/';
+} else {
+    $VIpath = FLUX_ADDON_DIR.'/viewinventory/';
+}
+
 $this->loginRequired();
 
 require_once 'Flux/TemporaryTable.php';
+require_once $VIpath.'lib/functions/ViewInventory.php';
+
 $fromTables = array("{$server->charMapDatabase}.item_db", "{$server->charMapDatabase}.item_db2");
 $tableName = "{$server->charMapDatabase}.items";
 $tempTable = new Flux_TemporaryTable($server->connection, $tableName, $fromTables);
 
 $charID = $params->get('id');
-
 if (!$charID) {
     $this->deny();
 }
 
 $char = $server->getCharacter($charID);
 if ($char) {
+
     if ($char->account_id != $session->account->account_id) {
         $this->deny();
     }
@@ -95,7 +106,7 @@ if ($char) {
                 'Right_hand'                =>    get_item_pos(2, $item, $cards),
                 'Mantle'                    =>    get_item_pos(4, $item, $cards),
                 'Accessory_1'               =>    get_item_pos(8, $item, $cards),
-                'Armor'                     =>    get_item_pos(6, $item, $cards),
+                'Armor'                     =>    get_item_pos(16, $item, $cards),
                 'Left_hand'                 =>    get_item_pos(32, $item, $cards),
                 'Shoes'                     =>    get_item_pos(64, $item, $cards),
                 'Accessory_2'               =>    get_item_pos(128, $item, $cards),
@@ -128,37 +139,4 @@ if ($char) {
     }
 }
 
-function get_item_pos( $item_location, $item, $cards )
-{
-    $add_card = [];
-    for($i = count($cards); $i <= 3; $i++){
-        $add_card[] = null;
-    }
-    $cards = array_merge($cards, $add_card);
-    $imgURL = 'http://imgs.ratemyserver.net/items/small/';
-    $imgEXT = '.gif';
-    $item_refine = $item->refine > 0 ? '+'.$item->refine.' ' : '';
-    return $item->equip == $item_location ?
-        (object)[
-            'nameid'        => $imgURL . $item->nameid . $imgEXT,
-            'name_japanese' => $item_refine.$item->name_japanese,
-            'card0'         => $cards[0],
-            'card1'         => $cards[1],
-            'card2'         => $cards[2],
-            'card3'         => $cards[3]
-        ] : null;
-}
-function post_card($cards)
-{
-    $card = $cards->card0;
-    $card .= $cards->card1 ? "<br/>".$cards->card1 : '';
-    $card .= $cards->card2 ? "<br/>".$cards->card2 : '';
-    $card .= $cards->card3 ? "<br/>".$cards->card3 : '';
-    return $card;
-}
 
-function dd()
-{
-    array_map(function($x) { var_dump($x); }, func_get_args());
-    die;
-}
