@@ -43,8 +43,10 @@
         top: 45%;
     }
     #item_col_name {
-        padding-left: 10px;
+        overflow: hidden;
         position: absolute;
+        white-space: nowrap;
+        width: 180px;
     }
     #item_col_desc{
         width: 184px;
@@ -55,6 +57,13 @@
     }
     #item_col_desc div{
         padding: 5px;
+    }
+    .tooltip-cards{
+        border-top:1px solid white;
+        padding-top:3px;
+    }
+    .tooltip-item-name{
+        padding-bottom:3px;
     }
 </style>
     <h2>Equipment</h2>
@@ -75,8 +84,7 @@
         <tr>
             <td colspan="7">
                 <img src="<?php echo VIpath().'images/equipwin_bg2_01.gif' ?>"  alt=""></td>
-        </tr>
-        <!-- start -->
+        </tr> 
         <?php
             $right_item = [
                 [ 'loc'=>'Upper_headgear','img_w'=>'72','img_h'=>'26','img'=>'03' ],
@@ -95,22 +103,20 @@
         foreach($right_item as $left => $right_) :
             $right  = (object)$right_;
             $loc    = $right->loc;
-            $img_w  = $right->img_w;
-            $img_h  = $right->img_h;
-            $img    = $right->img;
+            $r_cards = post_card($itemInventory->$loc) ? "<div class='tooltip-cards'>".post_card($itemInventory->$loc)."</div>" : '';
+            $r_title  = "<div class='tooltip-item-name'>".$itemInventory->$loc->name_japanese."</div>".$r_cards;
 
             $left     = (object)$left_item[$left];
             $l_loc    = $left->loc;
-            $l_img_w  = $left->img_w;
-            $l_img_h  = $left->img_h;
-            $l_img    = $left->img;
+            $l_cards = post_card($itemInventory->$l_loc) ? "<div class='tooltip-cards'>".post_card($itemInventory->$l_loc)."</div>" : '';
+            $l_title  = "<div class='tooltip-item-name'>".$itemInventory->$l_loc->name_japanese."</div>".$l_cards;
             ?>
         <tr>
             <td>
-                <img src="<?php echo getImage($itemInventory->$loc->nameid,'item');  ?>" title="<?php echo post_card($itemInventory->$loc); ?>" class="fr-item" data-id="<?php echo $itemInventory->$loc->item->nameid; ?>" data-item_name="<?php echo $itemInventory->$loc->item_name; ?>"></td>
+                <img src="<?php echo getImage($itemInventory->$loc->nameid,'item');  ?>" title="<?php echo $r_title;  ?>" class="fr-item" ></td>
             <td colspan="3">
-                <img src="<?php echo VIpath().'images/equipwin_bg2_'.$img.'.gif' ?>" width="<?php echo $img_w; ?>" height="<?php echo $img_h; ?>" alt="">
-                <a title="<?php echo $itemInventory->$loc->name_japanese;  ?>" <?php if (!$icon) echo ' colspan="2"' ?><?php if ($itemInventory->$loc->cardsOver) echo ' class="overslotted' . $itemInventory->$loc->cardsOver . '"'; else echo ' class="normalslotted"' ?>>
+                <img src="<?php echo VIpath().'images/equipwin_bg2_'.$right->img.'.gif' ?>" width="<?php echo $right->img_w; ?>" height="<?php echo $right->img_h; ?>" alt="">
+                <a title="<?php echo $r_title;  ?>" class="<?php echo $itemInventory->$loc->cardsOver ? 'overslotted' . $itemInventory->$loc->cardsOver : 'normalslotted'; ?>">
                     <?php echo $itemInventory->$loc->name_japanese;  ?>
                 </a>
             </td>
@@ -118,12 +124,12 @@
                 <td rowspan="11" class="wholeCharView">
             <?php endif; ?>
             <td>
-                <img src="<?php echo VIpath().'images/equipwin_bg2_'.$l_img.'.gif' ?>" width="<?php echo $l_img_w; ?>" height="<?php echo $l_img_h; ?>" alt="">
-                <a title="<?php echo $itemInventory->$l_loc->name_japanese;  ?>" <?php if (!$icon) echo ' colspan="2"' ?><?php if ($itemInventory->$l_loc->cardsOver) echo ' class="overslotted' . $itemInventory->$l_loc->cardsOver . '"'; else echo ' class="normalslotted"' ?>>
+                <img src="<?php echo VIpath().'images/equipwin_bg2_'.$left->img.'.gif' ?>" width="<?php echo $left->img_w; ?>" height="<?php echo $left->img_h; ?>" alt="">
+                <a title="<?php echo $l_title;  ?>" class="<?php echo $itemInventory->$l_loc->cardsOver ? 'overslotted' . $itemInventory->$l_loc->cardsOver : 'normalslotted'; ?>">
                     <?php echo $itemInventory->$l_loc->name_japanese;  ?>
                 </a> </td>
             <td>
-                <img src="<?php echo getImage($itemInventory->$l_loc->nameid,'item');  ?>" title="<?php echo post_card($itemInventory->$l_loc); ?>" class="fr-item" data-id="<?php echo $itemInventory->$l_loc->item->nameid; ?>" data-item_name="<?php echo $itemInventory->$l_loc->item_name; ?>"> </td>
+                <img src="<?php echo getImage($itemInventory->$l_loc->nameid,'item');  ?>" title="<?php echo $l_title;  ?>" class="fr-item"> </td>
         </tr>
         <?php endforeach; ?>
 
@@ -195,8 +201,9 @@
                 <img src="<?php echo VIpath().'images/spacer.gif' ?>" width="70" height="1" alt=""></td>
         </tr>
     </table>
-
-    <table id="view_collection_tbl" width="281" height="120" border="0" cellpadding="0" cellspacing="0">
+    <?php
+    //TODO: Add collection item?
+    /**<table id="view_collection_tbl" width="281" height="120" border="0" cellpadding="0" cellspacing="0">
         <tr>
             <td colspan="5">
                 <img src="<?php echo VIpath();?>images/collection_01.gif" width="280" height="7" alt=""></td>
@@ -250,8 +257,9 @@
             <td>
                 <img src="images/spacer.gif" width="1" height="7" alt=""></td>
         </tr>
-    </table>
-<script>
+    </table> **/
+    ?>
+    <script>
     $(document).ready(function(){
         var items=['char0','char1','char2'];
         var item = items[Math.floor(Math.random()*items.length)];
@@ -263,20 +271,23 @@
                 background: 'rgba(0, 0, 0, 0) url( ' + $('#'+item).attr('src') + ' ) no-repeat scroll center 135%'
             });
         }
-        $('.fr-item').on('click',function(){
-            var item_id = $(this).data('id');
-            var item_name = $(this).data('item_name');
-            $.ajax({
-                url: '?module=character&action=generateImage&type=collection&item_id='+item_id,
-                cache: false,
-                dataType: 'json',
-                success: function(data){
-                    console.log(data.image_url);
-                    $('#item_col_image').attr('src',data.image_url);
-                    $('#item_col_name').html(item_name);
-                }
-            });
-        });
+        //TODO: Add collection item?
+        //data-id=" $itemInventory->$loc->item->nameid; " data-item_name=" $itemInventory->$loc->name_japanese; " data-class=" $r_class; "data-id=" $itemInventory->$l_loc->item->nameid; " data-item_name=" $itemInventory->$l_loc->name_japanese; " data-class=" $l_class;
+//        $('.fr-item').on('click',function(){
+//            var item_id = $(this).data('id');
+//            var item_name = $(this).data('item_name');
+//            var item_class = $(this).data('class');
+//            $.ajax({
+//                url: '?module=character&action=generateImage&type=collection&item_id='+item_id,
+//                cache: false,
+//                dataType: 'json',
+//                success: function(data){
+//                    console.log(data.image_url);
+//                    $('#item_col_image').attr('src',data.image_url);
+//                    $('#item_col_name').html(item_name).attr('class','').addClass(item_class);
+//                }
+//            });
+//        });
     });
 </script>
 <?php else: ?>

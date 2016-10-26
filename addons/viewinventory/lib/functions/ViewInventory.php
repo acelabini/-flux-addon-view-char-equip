@@ -36,9 +36,7 @@
             (object)[
                 'nameid'        => $item->nameid,
                 'name_japanese' => $item_refine.$strong.$cardprefixnametable.$item->name_japanese.$item_slot,
-                'item_name'     => $item_refine.$strong.$item->name_japanese,
                 'cardsOver'     => $item->cardsOver,
-                'item'          => $item,
                 'card0'         => $cards[$item->card0],
                 'card1'         => $cards[$item->card1],
                 'card2'         => $cards[$item->card2],
